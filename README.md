@@ -3,10 +3,14 @@
 Wikidata for [glitchr/omnilab](https://github.com/glitchr-studio/omnilab): an item by its
 Q-number, by the identifier of a science base its statements carry - PubChem CID, ChEBI, CAS,
 InChIKey, ChEMBL, UNII, DSSTox, KEGG, UniProt, NCBI Gene, Ensembl, NCBI Taxonomy, GBIF,
-iNaturalist, SIMBAD, JPL SBDB, USGS earthquake - or by a label; its label, description and aliases in the language
-asked, those identifiers as cross-references for the Collector to follow, and a few properties
-with their units (mass, melting and boiling points, density, pKa, taxon name, radius, an earthquake's magnitude...); a search
-by label, narrowed to a domain when asked. Through Wikidata's Action API, no key.
+iNaturalist, SIMBAD, JPL SBDB, USGS earthquake, Reactome, Gaia, the NASA Exoplanet Archive, HGNC,
+OMIM, Mondo, Orphanet, HPO, EFO, ClinVar, dbSNP, GO, InterPro, Pfam, EC, WoRMS, ITIS, the Catalogue
+of Life, PBDB, eBird, the IUCN, the Minor Planet Center, a USGS water site, CODATA - or by a label;
+its label, description and aliases in the language asked, those identifiers as cross-references
+for the Collector to follow (a protein's EC class and InterPro entry, a compound's COD structures
+and Materials Project material as related things), and a few properties with their units (mass,
+melting and boiling points, density, pKa, taxon name, radius, an earthquake's magnitude...); a
+search by label, narrowed to a domain when asked. Through Wikidata's Action API, no key.
 
 ```php
 $wikidata = (new WikidataSourceFactory($http))->create(['mailto' => 'support@glitchr.io', 'language' => 'fr']);
@@ -32,7 +36,21 @@ omnilab:
 ```
 
 With PubChem and ChEBI configured too, the `Collector` follows a compound from one to the others:
-`$collector->collect('pubchem', 'caffeine')` reaches Wikidata by caffeine's PubChem CID.
+`$collector->collect('pubchem', 'caffeine')` reaches Wikidata by caffeine's PubChem CID. From an
+item into the other sources: `collect('wikidata', 'Q14905542', 1, ['hgnc'])` (the HBB gene, by its
+HGNC id), `collect('wikidata', 'Q118931', 1, ['mpc'])` (Apophis, by its MPC number),
+`collect('wikidata', 'Q460967', 1, ['ebird', 'itis', 'worms', 'col'])` (the American Robin).
+
+| Property | Scheme | Read as |
+|---|---|---|
+| P662, P683, P231, P235, P234, P592, P652, P3117, P665 | `pubchem.cid`, `chebi`, `cas`, `inchikey`, `inchi`, `chembl`, `unii`, `dsstox`, `kegg` | identifiers |
+| P352, P351, P594, P3937 | `uniprot`, `ncbi.gene`, `ensembl`, `reactome` | identifiers |
+| P354, P492, P5270, P1550, P3841, P11956, P1929, P6861 | `hgnc`, `omim`, `mondo`, `orphanet`, `hp`, `efo`, `clinvar`, `dbsnp` | identifiers |
+| P686, P2926, P3519, P591 | `go`, `interpro`, `pfam`, `ec` | identifiers; on a gene's or a protein's item, related (`go`, `domain`, `domain`, `enzyme`) |
+| P9824, P9902 | `cod`, `materialsproject` | related (`structure`) |
+| P685, P14607, P846, P3151, P850, P815, P10585, P10907, P3444, P627 | `ncbi.taxon`, `gbif` (twice), `inaturalist`, `worms`, `itis`, `col`, `pbdb`, `ebird`, `iucn` | identifiers |
+| P3083, P716, P13228, P5667, P5736 | `simbad`, `jpl.sbdb`, `gaia`, `exoplanet`, `mpc` | identifiers |
+| P3196, P13020, P1645 | `usgs.event`, `usgs.site`, `codata` | identifiers |
 
 ## Terms of use
 

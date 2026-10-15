@@ -73,7 +73,64 @@ final class WikidataSource extends HttpSource
         'P716' => [Scheme::JPL_SBDB, true],
         // An earthquake's id in the USGS catalogue (ComCat): us7000pn9s, or one of the catalogues it keeps (iscgem..., official...).
         'P3196' => [Scheme::USGS_EVENT, true],
+        // Genes, diseases, phenotypes, variants: HGNC:4827, MIM 141900, ORPHA:232, MONDO_0017146, HP:0001250, EFO's 0000400, VCV 13961, rs113488022.
+        'P354' => [Scheme::HGNC, true],
+        'P492' => [Scheme::OMIM, true],
+        'P5270' => [Scheme::MONDO, true],
+        'P1550' => [Scheme::ORPHANET, true],
+        'P3841' => [Scheme::HP, true],
+        'P11956' => [Scheme::EFO, true],
+        'P1929' => [Scheme::CLINVAR, true],
+        'P6861' => [Scheme::DBSNP, true],
+        // Classes: a GO term, an InterPro entry, a Pfam family, an EC number - related things on a gene's or a protein's item (CLASSES).
+        'P686' => [Scheme::GO, true],
+        'P2926' => [Scheme::INTERPRO, true],
+        'P3519' => [Scheme::PFAM, true],
+        'P591' => [Scheme::EC, true],
+        // Taxa in WoRMS, ITIS, the Catalogue of Life, the Paleobiology Database, eBird, the IUCN Red List.
+        'P850' => [Scheme::WORMS, true],
+        'P815' => [Scheme::ITIS, true],
+        'P10585' => [Scheme::COL, true],
+        'P10907' => [Scheme::PBDB, true],
+        'P3444' => [Scheme::EBIRD, true],
+        'P627' => [Scheme::IUCN, true],
+        // A minor planet or comet at the Minor Planet Center (99942), a USGS water monitoring location (its NWIS number), a CODATA constant (mp).
+        'P5736' => [Scheme::MPC, true],
+        'P13020' => [Scheme::USGS_SITE, true],
+        'P1645' => [Scheme::CODATA, true],
     ];
+
+    /**
+     * Classes, not things: on an item of a gene or a protein (one that
+     * carries GENE_OR_PROTEIN), an EC number, an InterPro entry, a Pfam
+     * family or a GO term is what it belongs to - related under these
+     * relations, not among its identifiers: two kinases sharing EC 2.7.10.1
+     * are not one. On the item of the class itself (hydrolase activity, the
+     * globin family) it is the same thing: an identifier.
+     */
+    private const CLASSES = ['P591' => 'enzyme', 'P2926' => 'domain', 'P3519' => 'domain', 'P686' => 'go'];
+
+    /** An item of a gene (Entrez Gene ID) or of a protein (UniProt). */
+    private const GENE_OR_PROTEIN = ['P351', 'P352'];
+
+    /**
+     * Other things an item is tied to, always: the property => the scheme,
+     * the relation. A crystal structure of the COD, a material of the
+     * Materials Project is one determination, one polymorph: magnesium and
+     * sodium chloride have several, none of them the element or the compound.
+     */
+    private const RELATED = [
+        'P9824' => [Scheme::COD, 'structure'],
+        'P9902' => [Scheme::MATERIALS_PROJECT, 'structure'],
+    ];
+
+    /**
+     * A lookup by these schemes leaves out the items that carry these
+     * statements: an HGNC id or a MIM number is on the gene's item and,
+     * often, on its protein's (HGNC:4827 on HBB, Q14905542, and hemoglobin
+     * beta, Q424422); a class is on many genes' and proteins' items.
+     */
+    private const LOOKUP_EXCLUDES = ['P354' => ['P352'], 'P492' => ['P352'], 'P591' => self::GENE_OR_PROTEIN, 'P2926' => self::GENE_OR_PROTEIN, 'P3519' => self::GENE_OR_PROTEIN, 'P686' => self::GENE_OR_PROTEIN];
 
     /** The properties read as such: the property => the key, the label (null: a quantity, a string otherwise). */
     private const PROPERTIES = [
@@ -112,11 +169,12 @@ final class WikidataSource extends HttpSource
     /** search() narrowed to a domain: the statements an item of it carries (haswbstatement, one of them). */
     private const DOMAINS = [
         'chemistry' => 'P231|P235|P662|P683',
-        'biology' => 'P352|P351|P594|P353|P3937',
+        // Genes, proteins, pathways, GO terms, protein families, diseases, variants.
+        'biology' => 'P352|P351|P594|P353|P3937|P686|P2926|P492|P5270|P6861',
         'taxonomy' => 'P225',
-        'astronomy' => 'P3083|P716|P13228|P5667',
-        // Earthquakes and volcanoes: a USGS earthquake id, or instance of earthquake, volcano, stratovolcano, central volcano.
-        'earth' => 'P3196|P31=Q7944|P31=Q8072|P31=Q169358|P31=Q190869',
+        'astronomy' => 'P3083|P716|P13228|P5667|P5736',
+        // Earthquakes and volcanoes: a USGS earthquake id, or instance of earthquake, volcano, stratovolcano, central volcano; a USGS water site.
+        'earth' => 'P3196|P31=Q7944|P31=Q8072|P31=Q169358|P31=Q190869|P13020',
     ];
 
     /** @var array<string, string> the labels already read, by item */
@@ -207,9 +265,16 @@ final class WikidataSource extends HttpSource
         $property = Scheme::GBIF === $identifier->scheme
             ? (ctype_digit($identifier->value) ? 'P846' : 'P14607')
             : array_search($identifier->scheme, array_map(static fn (array $p) => $p[0], self::IDENTIFIERS), true);
-        $value = $identifier->value;
+        // The value as Wikidata writes it: GO:0005829, HP:0001250, MONDO_0017146, a NWIS site without its agency.
+        $value = match ($identifier->scheme) {
+            Scheme::GO, Scheme::HP => $identifier->display(),
+            Scheme::MONDO => 'MONDO_'.$identifier->value,
+            Scheme::USGS_SITE => substr($identifier->value, \strlen('USGS-')),
+            default => $identifier->value,
+        };
         $statement = str_contains($value, ' ') ? '"'.$property.'='.str_replace('"', '', $value).'"' : $property.'='.$value;
-        $data = $this->api(['action' => 'query', 'list' => 'search', 'srsearch' => 'haswbstatement:'.$statement, 'srnamespace' => 0, 'srlimit' => 2, 'srprop' => '']);
+        $excluded = implode('', array_map(static fn (string $p) => ' -haswbstatement:'.$p, self::LOOKUP_EXCLUDES[$property] ?? []));
+        $data = $this->api(['action' => 'query', 'list' => 'search', 'srsearch' => 'haswbstatement:'.$statement.$excluded, 'srnamespace' => 0, 'srlimit' => 2, 'srprop' => '']);
         $found = array_column($data['query']['search'] ?? [], 'title');
 
         return 1 === \count($found) ? $found[0] : null;
@@ -278,12 +343,26 @@ final class WikidataSource extends HttpSource
         $claims = $item['claims'];
 
         $identifiers = [];
+        $related = [];
         $domain = null;
+        $geneOrProtein = [] !== array_intersect(self::GENE_OR_PROTEIN, array_keys($claims));
         foreach (self::IDENTIFIERS as $property => [$scheme]) {
+            $relation = $geneOrProtein ? (self::CLASSES[$property] ?? null) : null;
             foreach (self::best($claims[$property] ?? []) as $value) {
                 if (\is_string($value) && null !== ($identifier = Identifier::tryOf($scheme, $value))) {
+                    if (null !== $relation) {
+                        $related[$relation][] = $identifier;
+                        continue;
+                    }
                     $identifiers[] = $identifier;
                     $domain ??= $scheme->domain();
+                }
+            }
+        }
+        foreach (self::RELATED as $property => [$scheme, $relation]) {
+            foreach (self::best($claims[$property] ?? []) as $value) {
+                if (\is_string($value) && null !== ($identifier = Identifier::tryOf($scheme, $value))) {
+                    $related[$relation][] = $identifier;
                 }
             }
         }
@@ -326,6 +405,7 @@ final class WikidataSource extends HttpSource
             description: self::pick($item['descriptions'] ?? [], $this->language),
             properties: $properties,
             identifiers: new Identifiers($identifiers),
+            related: array_map(static fn (array $ids) => new Identifiers($ids), $related),
             url: 'https://www.wikidata.org/wiki/'.$qid,
             image: \is_string($image) ? 'https://commons.wikimedia.org/wiki/Special:FilePath/'.rawurlencode(str_replace(' ', '_', $image)) : null,
             time: \is_array($time) ? self::when($time) : null,

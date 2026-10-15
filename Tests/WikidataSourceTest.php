@@ -37,7 +37,16 @@ use Symfony\Component\HttpClient\Response\MockResponse;
  * (Q242309) and its classes' labels, the item that carries Gaia DR3
  * 4472832130942575872 (P13228: Barnard's star, Q14268) and the one that
  * carries Reactome's R-HSA-70171 (P3937: glycolysis, Q45317172), each with
- * its class's labels.
+ * its class's labels. On 2026-10-16: the HBB gene (Q14905542) and the item
+ * that carries HGNC:4827 without a UniProt accession (P354, the protein's
+ * item left out), Apophis (Q118931) and the item of MPC 99942 (P5736),
+ * sickle-cell disease (Q185034) and the item of MONDO_0017146 (P5270), T7
+ * DNA polymerase (Q7669118: a protein with an EC number and an InterPro
+ * entry), niobium-germanium (Q7039311: a COD structure), sodium chloride
+ * (Q2314: a Materials Project material), the American Robin (Q460967) and
+ * the item of eBird's amerob (P3444), the proton mass (Q97275155) and the
+ * item of CODATA's mp (P1645), BRAF V600E (Q21851559: ClinVar and dbSNP),
+ * each with its classes' labels.
  */
 final class WikidataSourceTest extends TestCase
 {
@@ -72,6 +81,21 @@ final class WikidataSourceTest extends TestCase
                     'Q45317172' => 'entities-Q45317172-en.json',
                     'Q4915012|Q21095676' => 'labels-Q4915012-Q21095676-en.json',
                     'Q7944' => 'labels-Q7944-en.json',
+                    'Q14905542' => 'entities-Q14905542-en.json',
+                    'Q7187' => 'labels-Q7187-en.json',
+                    'Q118931' => 'entities-Q118931-en.json',
+                    'Q59423687|Q217526|Q265392' => 'labels-Q59423687-Q217526-Q265392-en.json',
+                    'Q185034' => 'entities-Q185034-en.json',
+                    'Q929833|Q112193867' => 'labels-Q929833-Q112193867-en.json',
+                    'Q7669118' => 'entities-Q7669118-en.json',
+                    'Q8047|Q8054|Q417841|Q67015883' => 'labels-Q8047-Q8054-Q417841-Q67015883-en.json',
+                    'Q7039311' => 'entities-Q7039311-en.json',
+                    'Q2314' => 'entities-Q2314-en.json',
+                    'Q460967' => 'entities-Q460967-en.json',
+                    'Q97275155' => 'entities-Q97275155-en.json',
+                    'Q173227|Q96941619|Q83155724' => 'labels-Q173227-Q96941619-Q83155724-en.json',
+                    'Q21851559' => 'entities-Q21851559-en.json',
+                    'Q2656896' => 'labels-Q2656896-en.json',
                     'Q60235|Q16743231|Q12478159' => 'entities-search-caffeine-1.json',
                     'Q113145171|Q7889|Q215380' => 'labels-search-caffeine-1.json',
                     'Q60235|Q2974480|Q82375285' => 'entities-search-caffeine-chemistry.json',
@@ -89,6 +113,11 @@ final class WikidataSourceTest extends TestCase
                     'haswbstatement:P3196=us7000pn9s' => 'statement-P3196-us7000pn9s.json',
                     'haswbstatement:P13228=4472832130942575872' => 'statement-P13228-4472832130942575872.json',
                     'haswbstatement:P3937=R-HSA-70171' => 'statement-P3937-R-HSA-70171.json',
+                    'haswbstatement:P354=4827 -haswbstatement:P352' => 'statement-P354-4827-not-P352.json',
+                    'haswbstatement:P5736=99942' => 'statement-P5736-99942.json',
+                    'haswbstatement:P5270=MONDO_0017146' => 'statement-P5270-MONDO_0017146.json',
+                    'haswbstatement:P3444=amerob' => 'statement-P3444-amerob.json',
+                    'haswbstatement:P1645=mp' => 'statement-P1645-mp.json',
                     'caffeine haswbstatement:P231|P235|P662|P683' => 'search-caffeine-chemistry.json',
                     default => null,
                 },
@@ -188,7 +217,7 @@ final class WikidataSourceTest extends TestCase
         self::assertSame(Domain::TAXONOMY, $cougar->domain);
         self::assertSame('taxon', $cougar->kind);
         self::assertSame('Puma concolor', $cougar->value('taxon_name'));
-        self::assertSame(['wikidata:Q35255', 'ncbi.taxon:9696', 'gbif:2435099', 'inaturalist:42007'], $cougar->identifiers()->keys(), 'GBIF\'s legacy Backbone number (P846): no key of GBIF\'s 2026 taxonomy (P14607) on it yet');
+        self::assertSame(['wikidata:Q35255', 'ncbi.taxon:9696', 'gbif:2435099', 'inaturalist:42007', 'itis:552479', 'col:4QHKG', 'iucn:18868'], $cougar->identifiers()->keys(), 'GBIF\'s legacy Backbone number (P846): no key of GBIF\'s 2026 taxonomy (P14607) on it yet; its ITIS TSN, Catalogue of Life id and IUCN id');
     }
 
     public function testGbifsTwoKeysOneSchemeTwoProperties(): void
@@ -196,7 +225,7 @@ final class WikidataSourceTest extends TestCase
         $dolphin = $this->source()->entity('Q174199');
         self::assertSame('common bottlenose dolphin', $dolphin->label);
         self::assertSame('Tursiops truncatus', $dolphin->value('taxon_name'));
-        self::assertSame(['wikidata:Q174199', 'ncbi.taxon:9739', 'gbif:59R5F', 'gbif:2440447', 'inaturalist:41482'], $dolphin->identifiers()->keys(), 'the key of GBIF\'s 2026 taxonomy (P14607), then the legacy number (P846)');
+        self::assertSame(['wikidata:Q174199', 'ncbi.taxon:9739', 'gbif:59R5F', 'gbif:2440447', 'inaturalist:41482', 'worms:137111', 'itis:180426', 'col:59R5F', 'pbdb:64472', 'iucn:22563'], $dolphin->identifiers()->keys(), 'the key of GBIF\'s 2026 taxonomy (P14607), then the legacy number (P846); the Catalogue of Life\'s id is GBIF\'s key');
 
         $this->calls = [];
         self::assertSame('wikidata:Q174199', $this->source()->entity(Identifier::of(Scheme::GBIF, '59R5F'))?->id->key());
@@ -337,5 +366,105 @@ final class WikidataSourceTest extends TestCase
         $glycolysis = $this->source()->entity('R-HSA-70171');
         self::assertSame(['wikidata:Q45317172', 'Glycolysis'], [$glycolysis?->id->key(), $glycolysis?->label], 'found by its Reactome id (P3937)');
         self::assertContains('reactome:R-HSA-70171', $glycolysis->identifiers()->keys());
+    }
+
+    public function testAGeneByItsHgncIdItsProteinsItemLeftOut(): void
+    {
+        $hbb = $this->source()->entity('HGNC:4827');
+
+        self::assertSame('haswbstatement:P354=4827 -haswbstatement:P352', $this->calls[0]['srsearch'], 'HGNC:4827 is on the gene\'s item and on its protein\'s: the protein left out');
+        self::assertSame(['wikidata:Q14905542', 'HBB', 'gene', Domain::BIOLOGY], [$hbb?->id->key(), $hbb?->label, $hbb?->kind, $hbb?->domain]);
+        self::assertSame(['wikidata:Q14905542', 'ncbi.gene:3043', 'ensembl:ENSG00000244734', 'hgnc:4827', 'omim:141900'], $hbb->identifiers()->keys(), 'P354 and P492: the HGNC id and the MIM number the Collector offers HGNC and Open Targets');
+
+        $this->calls = [];
+        self::assertNull($this->source()->entity('omim:141900'));
+        self::assertSame('haswbstatement:P492=141900 -haswbstatement:P352', $this->calls[0]['srsearch']);
+    }
+
+    public function testADiseaseByItsMondoTerm(): void
+    {
+        $disease = $this->source()->entity('MONDO_0017146');
+
+        self::assertSame('haswbstatement:P5270=MONDO_0017146', $this->calls[0]['srsearch'], 'Mondo as Wikidata writes it, the OBO short form');
+        self::assertSame(['wikidata:Q185034', 'sickle-cell disease', 'rare disease', Domain::BIOLOGY], [$disease?->id->key(), $disease?->label, $disease?->kind, $disease?->domain]);
+        self::assertSame(['wikidata:Q185034', 'omim:603903', 'mondo:0017146', 'orphanet:275752'], $disease->identifiers()->keys(), 'P492, P5270 and P1550 (Orphanet; P1554 is UBERON)');
+    }
+
+    public function testAVariantsClinVarAndDbSnpIds(): void
+    {
+        $variant = $this->source()->entity('Q21851559');
+
+        self::assertSame(['BRAF V600E', 'missense mutation'], [$variant?->label, $variant?->kind]);
+        self::assertSame(['wikidata:Q21851559', 'clinvar:13961', 'dbsnp:rs113488022'], $variant->identifiers()->keys(), 'P1929 and P6861');
+    }
+
+    public function testAClassIsAnIdentifierOfItsOwnItemAndRelatedOnAProteins(): void
+    {
+        $polymerase = $this->source()->entity('Q7669118');
+
+        self::assertSame(['wikidata:Q7669118', 'uniprot:P00581'], $polymerase?->identifiers()->keys(), 'T7 DNA polymerase: a protein, not its EC class nor its InterPro entry');
+        self::assertSame(['ec:2.7.7.7'], $polymerase->related('enzyme')->keys(), 'P591 on a protein\'s item: related');
+        self::assertSame(['interpro:IPR034749'], $polymerase->related('domain')->keys(), 'P2926 on a protein\'s item: related');
+
+        $this->calls = [];
+        self::assertNull($this->source()->entity('GO:0005829'));
+        self::assertSame('haswbstatement:P686=GO:0005829 -haswbstatement:P351 -haswbstatement:P352', $this->calls[0]['srsearch'], 'a class looked up among the items that are neither a gene nor a protein, as Wikidata writes it');
+        $this->calls = [];
+        $this->source()->entity('EC 2.7.7.7');
+        self::assertSame('haswbstatement:P591=2.7.7.7 -haswbstatement:P351 -haswbstatement:P352', $this->calls[0]['srsearch']);
+    }
+
+    public function testACrystalStructureOrAMaterialIsRelatedNotTheCompound(): void
+    {
+        $alloy = $this->source()->entity('Q7039311');
+        self::assertSame(['wikidata:Q7039311', 'pubchem.cid:14475409', 'cas:12025-22-8'], $alloy?->identifiers()->keys());
+        self::assertSame(['cod:4124630'], $alloy->related('structure')->keys(), 'P9824: a structure of the COD, one determination among those a compound may have');
+
+        $salt = $this->source()->entity('Q2314');
+        self::assertSame(['materialsproject:mp-22862'], $salt?->related('structure')->keys(), 'P9902: a material of the Materials Project, one polymorph');
+        self::assertNull($salt->identifier(Scheme::MATERIALS_PROJECT));
+
+        try {
+            $this->source()->entity('cod:4124630');
+            self::fail('a structure is not looked up: the item that carries it is not that structure');
+        } catch (NotSupportedException) {
+        }
+    }
+
+    public function testTaxaOfTheBiodiversityBases(): void
+    {
+        $robin = $this->source()->entity('ebird:amerob');
+
+        self::assertSame('haswbstatement:P3444=amerob', $this->calls[0]['srsearch']);
+        self::assertSame(['wikidata:Q460967', 'American Robin', Domain::TAXONOMY], [$robin?->id->key(), $robin?->label, $robin?->domain]);
+        self::assertSame(['wikidata:Q460967', 'ncbi.taxon:9188', 'gbif:9510564', 'inaturalist:12727', 'worms:1451661', 'itis:179759', 'col:59PMB', 'pbdb:83492', 'ebird:amerob', 'iucn:103889499'], $robin->identifiers()->keys(), 'P850, P815, P10585, P10907, P3444 and P627');
+    }
+
+    public function testAMinorPlanetAndAConstant(): void
+    {
+        $apophis = $this->source()->entity(Identifier::of(Scheme::MPC, '99942'));
+        self::assertSame('haswbstatement:P5736=99942', $this->calls[0]['srsearch']);
+        self::assertSame(['wikidata:Q118931', '99942 Apophis', Domain::ASTRONOMY], [$apophis?->id->key(), $apophis?->label, $apophis?->domain]);
+        self::assertSame(['wikidata:Q118931', 'jpl.sbdb:20099942', 'mpc:99942'], $apophis->identifiers()->keys(), 'P716 and P5736: JPL\'s SPK-ID and the MPC\'s number');
+
+        $this->calls = [];
+        $proton = $this->source()->entity('codata:mp');
+        self::assertSame('haswbstatement:P1645=mp', $this->calls[0]['srsearch']);
+        self::assertSame(['wikidata:Q97275155', 'proton mass', 'physical constant'], [$proton?->id->key(), $proton?->label, $proton?->kind]);
+        self::assertSame(['wikidata:Q97275155', 'codata:mp'], $proton->identifiers()->keys(), 'P1645, NIST\'s short name');
+    }
+
+    public function testAWaterSiteAsWikidataWritesIt(): void
+    {
+        self::assertNull($this->source()->entity('USGS-321804090244200'));
+        self::assertSame('haswbstatement:P13020=321804090244200', $this->calls[0]['srsearch'], 'P13020, the NWIS number without the agency');
+    }
+
+    public function testTheNewDomainsStatements(): void
+    {
+        $source = $this->source();
+        $source->search(new Query('sickle', Domain::BIOLOGY));
+        $source->search(new Query('Apophis', Domain::ASTRONOMY));
+        self::assertSame(['sickle haswbstatement:P352|P351|P594|P353|P3937|P686|P2926|P492|P5270|P6861', 'Apophis haswbstatement:P3083|P716|P13228|P5667|P5736'], array_column($this->calls, 'srsearch'));
     }
 }
