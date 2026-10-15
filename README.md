@@ -3,9 +3,9 @@
 Wikidata for [glitchr/omnilab](https://github.com/glitchr-studio/omnilab): an item by its
 Q-number, by the identifier of a science base its statements carry - PubChem CID, ChEBI, CAS,
 InChIKey, ChEMBL, UNII, DSSTox, KEGG, UniProt, NCBI Gene, Ensembl, NCBI Taxonomy, GBIF,
-iNaturalist, SIMBAD, JPL SBDB - or by a label; its label, description and aliases in the language
+iNaturalist, SIMBAD, JPL SBDB, USGS earthquake - or by a label; its label, description and aliases in the language
 asked, those identifiers as cross-references for the Collector to follow, and a few properties
-with their units (mass, melting and boiling points, density, pKa, taxon name, radius...); a search
+with their units (mass, melting and boiling points, density, pKa, taxon name, radius, an earthquake's magnitude...); a search
 by label, narrowed to a domain when asked. Through Wikidata's Action API, no key.
 
 ```php

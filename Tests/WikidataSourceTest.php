@@ -26,7 +26,9 @@ use Symfony\Component\HttpClient\Response\MockResponse;
  * English and in French and the label of its class, the cougar (Q35255) and
  * the label of its class, the common bottlenose dolphin (Q174199: GBIF's
  * new key and its legacy number) and the items that carry them (P14607=59R5F,
- * P846=2440447) or not (P14607=4CGXP), the items whose statements carry PubChem CID 2519
+ * P846=2440447) or not (P14607=4CGXP), the 2025 Myanmar earthquake
+ * (Q133574091) and the label of its class, the item that carries its USGS
+ * id (P3196=us7000pn9s), the items whose statements carry PubChem CID 2519
  * and ChEBI 27732 (haswbstatement), the two that carry CAS 7732-18-5 (water
  * and distilled water), the items labelled "caffeine", a search for it
  * (three a page) and one among chemistry, each with its items and their
@@ -58,6 +60,8 @@ final class WikidataSourceTest extends TestCase
                     'Q174199' => 'entities-Q174199-en.json',
                     'Q113145171' => "labels-Q113145171-$lang.json",
                     'Q16521' => 'labels-Q16521-en.json',
+                    'Q133574091' => 'entities-Q133574091-en.json',
+                    'Q7944' => 'labels-Q7944-en.json',
                     'Q60235|Q16743231|Q12478159' => 'entities-search-caffeine-1.json',
                     'Q113145171|Q7889|Q215380' => 'labels-search-caffeine-1.json',
                     'Q60235|Q2974480|Q82375285' => 'entities-search-caffeine-chemistry.json',
@@ -72,6 +76,7 @@ final class WikidataSourceTest extends TestCase
                     'haswbstatement:P14607=59R5F' => 'statement-P14607-59R5F.json',
                     'haswbstatement:P846=2440447' => 'statement-P846-2440447.json',
                     'haswbstatement:P14607=4CGXP' => 'statement-P14607-4CGXP.json',
+                    'haswbstatement:P3196=us7000pn9s' => 'statement-P3196-us7000pn9s.json',
                     'caffeine haswbstatement:P231|P235|P662|P683' => 'search-caffeine-chemistry.json',
                     default => null,
                 },
@@ -190,6 +195,27 @@ final class WikidataSourceTest extends TestCase
         self::assertNull($this->source()->entity(Identifier::of(Scheme::GBIF, '4CGXP')), 'the lion carries no P14607 yet: its number finds it');
     }
 
+    public function testAnEarthquakeByItsUsgsId(): void
+    {
+        $quake = $this->source()->entity(Identifier::of(Scheme::USGS_EVENT, 'us7000pn9s'));
+        self::assertSame('haswbstatement:P3196=us7000pn9s', $this->calls[0]['srsearch'], 'P3196, the USGS earthquake ID');
+        self::assertSame('wikidata:Q133574091', $quake?->id->key());
+        self::assertSame('2025 Myanmar earthquake', $quake->label);
+        self::assertSame(Domain::EARTH, $quake->domain);
+        self::assertSame('earthquake', $quake->kind);
+        self::assertSame(['wikidata:Q133574091', 'usgs.event:us7000pn9s'], $quake->identifiers()->keys(), 'the USGS id, which the Collector offers the USGS');
+        self::assertSame(7.7, $quake->value('moment_magnitude')?->value);
+        self::assertNull($quake->value('moment_magnitude')->unit, 'a magnitude has no unit');
+        self::assertSame('2025-03-28', $quake->time?->format('Y-m-d'), 'P585 to the day');
+        self::assertSame([22.013, 95.922], [$quake->place?->latitude, $quake->place?->longitude], 'P625');
+
+        $this->calls = [];
+        self::assertSame('wikidata:Q133574091', $this->source()->entity('usgs:US7000PN9S')?->id->key(), 'its prefixed form, lower-cased');
+        $this->calls = [];
+        self::assertNull($this->source()->entity('usgs:official20110311054624120_30'));
+        self::assertSame('haswbstatement:P3196=official20110311054624120_30', $this->calls[0]['srsearch'], 'a catalogue\'s long id ComCat keeps, as P3196 gives some (2011 Tohoku)');
+    }
+
     public function testUnknownIsNull(): void
     {
         self::assertNull($this->source()->entity('Q999999999999'));
@@ -199,7 +225,7 @@ final class WikidataSourceTest extends TestCase
 
     public function testAnIdentifierItDoesNotLookUpIsRefusedBeforeAnyCall(): void
     {
-        foreach (['InChI=1S/C8H10N4O2/c1-10-4-9-6-5(10)7(13)12(3)8(14)11(6)2/h4H,1-3H3', Identifier::of(Scheme::PDB, '1L5Q'), Identifier::of(Scheme::USGS_EVENT, 'us6000u24c')] as $id) {
+        foreach (['InChI=1S/C8H10N4O2/c1-10-4-9-6-5(10)7(13)12(3)8(14)11(6)2/h4H,1-3H3', Identifier::of(Scheme::PDB, '1L5Q')] as $id) {
             try {
                 $this->source()->entity($id);
                 self::fail('not looked up: '.$id);

@@ -1,7 +1,7 @@
 {
     "name": "omnilab/wikidata",
     "type": "library",
-    "description": "Omnilab Wikidata: an item by Q-number, by the identifier of a science base its statements carry (PubChem CID, ChEBI, CAS, InChIKey, ChEMBL, UniProt, NCBI Gene and Taxonomy, Ensembl, GBIF, iNaturalist, SIMBAD, JPL SBDB, UNII, DSSTox, KEGG) or by label - its label, description and aliases in the language asked, those identifiers as cross-references, a few properties with units (mass, melting and boiling points, density...) - and a search by label, narrowed to a domain, through the Wikidata Action API, no key needed, within Wikimedia's usage policy.",
+    "description": "Omnilab Wikidata: an item by Q-number, by the identifier of a science base its statements carry (PubChem CID, ChEBI, CAS, InChIKey, ChEMBL, UniProt, NCBI Gene and Taxonomy, Ensembl, GBIF, iNaturalist, SIMBAD, JPL SBDB, USGS earthquake, UNII, DSSTox, KEGG) or by label - its label, description and aliases in the language asked, those identifiers as cross-references, a few properties with units (mass, melting and boiling points, density...) - and a search by label, narrowed to a domain, through the Wikidata Action API, no key needed, within Wikimedia's usage policy.",
     "keywords": [
         "science",
         "wikidata",

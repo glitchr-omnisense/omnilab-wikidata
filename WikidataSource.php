@@ -67,6 +67,8 @@ final class WikidataSource extends HttpSource
         'P3151' => [Scheme::INATURALIST, true],
         'P3083' => [Scheme::SIMBAD, true],
         'P716' => [Scheme::JPL_SBDB, true],
+        // An earthquake's id in the USGS catalogue (ComCat): us7000pn9s, or one of the catalogues it keeps (iscgem..., official...).
+        'P3196' => [Scheme::USGS_EVENT, true],
     ];
 
     /** The properties read as such: the property => the key, the label (null: a quantity, a string otherwise). */
@@ -89,6 +91,7 @@ final class WikidataSource extends HttpSource
         'P2583' => ['distance_from_earth', 'Distance from Earth'],
         'P2044' => ['elevation', 'Elevation above sea level'],
         'P2528' => ['richter_magnitude', 'Magnitude (Richter scale)'],
+        'P2527' => ['moment_magnitude', 'Magnitude (moment magnitude scale)'],
     ];
 
     /** The units met most, by item: their symbols, so that no call is made for them. */
@@ -108,8 +111,8 @@ final class WikidataSource extends HttpSource
         'biology' => 'P352|P351|P594|P353',
         'taxonomy' => 'P225',
         'astronomy' => 'P3083|P716',
-        // Earthquakes and volcanoes: instance of earthquake, volcano, stratovolcano, central volcano.
-        'earth' => 'P31=Q7944|P31=Q8072|P31=Q169358|P31=Q190869',
+        // Earthquakes and volcanoes: a USGS earthquake id, or instance of earthquake, volcano, stratovolcano, central volcano.
+        'earth' => 'P3196|P31=Q7944|P31=Q8072|P31=Q169358|P31=Q190869',
     ];
 
     /** @var array<string, string> the labels already read, by item */
