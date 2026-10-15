@@ -219,7 +219,7 @@ ClinVar and dbSNP ids, T7 DNA polymerase (Q7669118) with its EC number and Inter
 niobium-germanium (Q7039311) and sodium chloride (Q2314) with their COD structure and Materials
 Project material related. The `Collector` from Wikidata into HGNC (the HBB gene: 3 calls, 3.1 s;
 and back, 3 calls, 2.1 s), into the MPC (Apophis: 5 calls, 3.9 s), into eBird, ITIS, WoRMS and the
-Catalogue of Life (the American Robin: 13 calls, 15.5 s) and into CODATA (the proton mass: 4 calls,
+Catalogue of Life (the American Robin: 13 calls, 7.3 to 15.5 s in two runs) and into CODATA (the proton mass: 4 calls,
 1.7 s). The fixtures of that day are its answers, likewise.
 
 Not verified: a 429 of Wikimedia's rate limits (the handling is the core's, `Retry-After` read);
