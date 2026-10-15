@@ -80,7 +80,8 @@ solvent) and references are not read.
 | P351 Entrez Gene ID | `ncbi.gene` | yes |
 | P594 Ensembl gene ID | `ensembl` | yes |
 | P685 NCBI taxonomy ID | `ncbi.taxon` | yes |
-| P846 GBIF species ID (before the 2026 update) | `gbif` | yes |
+| P14607 GBIF taxon ID (after the 2026 update) | `gbif`: a key of the Catalogue of Life eXtended Release, `4CGXP` | yes |
+| P846 GBIF species ID (before the 2026 update) | `gbif`: a number of the legacy GBIF Backbone, `5219404` | yes |
 | P3151 iNaturalist taxon ID | `inaturalist` | yes |
 | P3083 SIMBAD ID | `simbad` | yes |
 | P716 JPL Small-Body Database SPK-ID | `jpl.sbdb` | yes |
@@ -109,9 +110,12 @@ the Quantity's uncertainty, half the interval.
 
 - PDB structures (P638) are not cross-references: on caffeine they are the 22 structures that
   hold it - none is caffeine itself, so the Merger must not take one for it.
-- GBIF's taxon ids of its 2026 backbone (P14607) are letters (`^[23456789BCDFGHJKLMNPQRSTVWXYZ]{1,6}$`),
-  not the core's numeric `gbif` scheme; the old keys (P846) are read, and api.gbif.org still
-  answers them.
+- GBIF's two keys are one scheme read from two properties: P14607, the key of GBIF's taxonomy
+  since June 2026 (the Catalogue of Life eXtended Release: `^[23456789BCDFGHJKLMNPQRSTVWXYZ]{1,6}$`),
+  and P846, the legacy Backbone's number. An item gives both when it has both, P14607's first; a
+  key is looked for in P14607, a number in P846. On 2026-10-15, 2663 items carried P14607 (the
+  bottlenose dolphin, `59R5F`), not the lion (Q140: P846 `5219404` only): a lookup by the new key
+  of a taxon not yet given one is `null`, by its number it is found - the GBIF source gives both.
 - No other statement is read: the item-valued ones (subclass of, has part...), the qualifiers, the
   references, the sitelinks. No SPARQL, no lexemes, no properties as entities.
 - The search index (CirrusSearch) follows edits after a delay: a statement just added may not be
@@ -123,7 +127,9 @@ Against the real service on 2026-10-15, without a key: every property number abo
 Wikidata (`wbgetentities&ids=P662|P683|...`), and every unit and class item of the tables; caffeine
 (Q60235) in English and French with its identifiers, units and classes; caffeine found by its
 PubChem CID, its ChEBI id, its CAS number, its InChIKey and its label; the cougar (Q35255) with its
-NCBI, GBIF and iNaturalist ids; CAS 7732-18-5 on two items; an item that does not exist
+NCBI, GBIF and iNaturalist ids; the bottlenose dolphin (Q174199) found by its P14607 key `59R5F` and
+by its P846 number `2440447`, the lion by its number but not by its key `4CGXP` (no P14607 on it);
+CAS 7732-18-5 on two items; an item that does not exist
 (`no-such-entity`); a search by label and its second page; a search among chemistry (46 items);
 the domain filters (Tohoku and Etna among earth, Andromeda among astronomy, TP53 among biology,
 "puma" among taxonomy); the answer while the servers lag (`maxlag`, 200 with `Retry-After: 5`,

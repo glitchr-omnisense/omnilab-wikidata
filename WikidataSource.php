@@ -61,6 +61,8 @@ final class WikidataSource extends HttpSource
         'P351' => [Scheme::NCBI_GENE, true],
         'P594' => [Scheme::ENSEMBL, true],
         'P685' => [Scheme::NCBI_TAXON, true],
+        // GBIF's key since its 2026 taxonomy (4CGXP), then the legacy Backbone's number (5219404): one scheme, two properties.
+        'P14607' => [Scheme::GBIF, true],
         'P846' => [Scheme::GBIF, true],
         'P3151' => [Scheme::INATURALIST, true],
         'P3083' => [Scheme::SIMBAD, true],
@@ -195,7 +197,9 @@ final class WikidataSource extends HttpSource
      */
     private function byStatement(Identifier $identifier): ?string
     {
-        $property = array_search($identifier->scheme, array_map(static fn (array $p) => $p[0], self::IDENTIFIERS), true);
+        $property = Scheme::GBIF === $identifier->scheme
+            ? (ctype_digit($identifier->value) ? 'P846' : 'P14607')
+            : array_search($identifier->scheme, array_map(static fn (array $p) => $p[0], self::IDENTIFIERS), true);
         $value = $identifier->value;
         $statement = str_contains($value, ' ') ? '"'.$property.'='.str_replace('"', '', $value).'"' : $property.'='.$value;
         $data = $this->api(['action' => 'query', 'list' => 'search', 'srsearch' => 'haswbstatement:'.$statement, 'srnamespace' => 0, 'srlimit' => 2, 'srprop' => '']);

@@ -24,7 +24,9 @@ use Symfony\Component\HttpClient\Response\MockResponse;
  * Fixtures recorded from www.wikidata.org/w/api.php on 2026-10-15, the
  * statements' references and qualifiers taken out: caffeine (Q60235) in
  * English and in French and the label of its class, the cougar (Q35255) and
- * the label of its class, the items whose statements carry PubChem CID 2519
+ * the label of its class, the common bottlenose dolphin (Q174199: GBIF's
+ * new key and its legacy number) and the items that carry them (P14607=59R5F,
+ * P846=2440447) or not (P14607=4CGXP), the items whose statements carry PubChem CID 2519
  * and ChEBI 27732 (haswbstatement), the two that carry CAS 7732-18-5 (water
  * and distilled water), the items labelled "caffeine", a search for it
  * (three a page) and one among chemistry, each with its items and their
@@ -53,6 +55,7 @@ final class WikidataSourceTest extends TestCase
                 'wbgetentities' => match ($query['ids'] ?? null) {
                     'Q60235' => "entities-Q60235-$lang.json",
                     'Q35255' => 'entities-Q35255-en.json',
+                    'Q174199' => 'entities-Q174199-en.json',
                     'Q113145171' => "labels-Q113145171-$lang.json",
                     'Q16521' => 'labels-Q16521-en.json',
                     'Q60235|Q16743231|Q12478159' => 'entities-search-caffeine-1.json',
@@ -66,6 +69,9 @@ final class WikidataSourceTest extends TestCase
                     'haswbstatement:P662=2519' => 'statement-P662-2519.json',
                     'haswbstatement:P683=27732' => 'statement-P683-27732.json',
                     'haswbstatement:P231=7732-18-5' => 'statement-P231-7732-18-5.json',
+                    'haswbstatement:P14607=59R5F' => 'statement-P14607-59R5F.json',
+                    'haswbstatement:P846=2440447' => 'statement-P846-2440447.json',
+                    'haswbstatement:P14607=4CGXP' => 'statement-P14607-4CGXP.json',
                     'caffeine haswbstatement:P231|P235|P662|P683' => 'search-caffeine-chemistry.json',
                     default => null,
                 },
@@ -165,7 +171,23 @@ final class WikidataSourceTest extends TestCase
         self::assertSame(Domain::TAXONOMY, $cougar->domain);
         self::assertSame('taxon', $cougar->kind);
         self::assertSame('Puma concolor', $cougar->value('taxon_name'));
-        self::assertSame(['wikidata:Q35255', 'ncbi.taxon:9696', 'gbif:2435099', 'inaturalist:42007'], $cougar->identifiers()->keys(), 'GBIF\'s backbone key (P846); the 2026 taxon ids (P14607) are not of the scheme');
+        self::assertSame(['wikidata:Q35255', 'ncbi.taxon:9696', 'gbif:2435099', 'inaturalist:42007'], $cougar->identifiers()->keys(), 'GBIF\'s legacy Backbone number (P846): no key of GBIF\'s 2026 taxonomy (P14607) on it yet');
+    }
+
+    public function testGbifsTwoKeysOneSchemeTwoProperties(): void
+    {
+        $dolphin = $this->source()->entity('Q174199');
+        self::assertSame('common bottlenose dolphin', $dolphin->label);
+        self::assertSame('Tursiops truncatus', $dolphin->value('taxon_name'));
+        self::assertSame(['wikidata:Q174199', 'ncbi.taxon:9739', 'gbif:59R5F', 'gbif:2440447', 'inaturalist:41482'], $dolphin->identifiers()->keys(), 'the key of GBIF\'s 2026 taxonomy (P14607), then the legacy number (P846)');
+
+        $this->calls = [];
+        self::assertSame('wikidata:Q174199', $this->source()->entity(Identifier::of(Scheme::GBIF, '59R5F'))?->id->key());
+        self::assertSame('haswbstatement:P14607=59R5F', $this->calls[0]['srsearch'], 'a key: P14607');
+        $this->calls = [];
+        self::assertSame('wikidata:Q174199', $this->source()->entity('gbif:2440447')?->id->key());
+        self::assertSame('haswbstatement:P846=2440447', $this->calls[0]['srsearch'], 'a number: P846');
+        self::assertNull($this->source()->entity(Identifier::of(Scheme::GBIF, '4CGXP')), 'the lion carries no P14607 yet: its number finds it');
     }
 
     public function testUnknownIsNull(): void
