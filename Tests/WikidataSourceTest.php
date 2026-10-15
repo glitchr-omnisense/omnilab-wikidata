@@ -33,7 +33,11 @@ use Symfony\Component\HttpClient\Response\MockResponse;
  * and distilled water), the items labelled "caffeine", a search for it
  * (three a page) and one among chemistry, each with its items and their
  * classes' labels, an item that does not exist (no-such-entity) and the
- * answer to a call while the servers lag (maxlag).
+ * answer to a call while the servers lag (maxlag). That evening: 51 Peg b
+ * (Q242309) and its classes' labels, the item that carries Gaia DR3
+ * 4472832130942575872 (P13228: Barnard's star, Q14268) and the one that
+ * carries Reactome's R-HSA-70171 (P3937: glycolysis, Q45317172), each with
+ * its class's labels.
  */
 final class WikidataSourceTest extends TestCase
 {
@@ -61,6 +65,12 @@ final class WikidataSourceTest extends TestCase
                     'Q113145171' => "labels-Q113145171-$lang.json",
                     'Q16521' => 'labels-Q16521-en.json',
                     'Q133574091' => 'entities-Q133574091-en.json',
+                    'Q242309' => 'entities-Q242309-en.json',
+                    'Q44559|Q651336|Q3421309' => 'labels-Q44559-Q651336-Q3421309-en.json',
+                    'Q14268' => 'entities-Q14268-en.json',
+                    'Q5893' => 'labels-Q5893-en.json',
+                    'Q45317172' => 'entities-Q45317172-en.json',
+                    'Q4915012|Q21095676' => 'labels-Q4915012-Q21095676-en.json',
                     'Q7944' => 'labels-Q7944-en.json',
                     'Q60235|Q16743231|Q12478159' => 'entities-search-caffeine-1.json',
                     'Q113145171|Q7889|Q215380' => 'labels-search-caffeine-1.json',
@@ -77,6 +87,8 @@ final class WikidataSourceTest extends TestCase
                     'haswbstatement:P846=2440447' => 'statement-P846-2440447.json',
                     'haswbstatement:P14607=4CGXP' => 'statement-P14607-4CGXP.json',
                     'haswbstatement:P3196=us7000pn9s' => 'statement-P3196-us7000pn9s.json',
+                    'haswbstatement:P13228=4472832130942575872' => 'statement-P13228-4472832130942575872.json',
+                    'haswbstatement:P3937=R-HSA-70171' => 'statement-P3937-R-HSA-70171.json',
                     'caffeine haswbstatement:P231|P235|P662|P683' => 'search-caffeine-chemistry.json',
                     default => null,
                 },
@@ -311,5 +323,19 @@ final class WikidataSourceTest extends TestCase
 
         self::assertCount(2, $this->calls);
         self::assertGreaterThanOrEqual(0.29, microtime(true) - $start, 'two calls, one interval of 0.3 s: Wikimedia\'s 200 a minute');
+    }
+
+    public function testAstronomysAndReactomesIdentifiers(): void
+    {
+        $planet = $this->source()->entity('Q242309');
+        self::assertSame(['wikidata:Q242309', 'simbad:* 51 Peg b', 'exoplanet:51 Peg b'], $planet?->identifiers()->keys(), 'P3083 and P5667: SIMBAD\'s and the NASA Exoplanet Archive\'s names');
+
+        $barnard = $this->source()->entity('gaia:4472832130942575872');
+        self::assertSame('wikidata:Q14268', $barnard?->id->key(), 'found by its Gaia DR3 source_id (P13228)');
+        self::assertContains('gaia:4472832130942575872', $barnard->identifiers()->keys());
+
+        $glycolysis = $this->source()->entity('R-HSA-70171');
+        self::assertSame(['wikidata:Q45317172', 'Glycolysis'], [$glycolysis?->id->key(), $glycolysis?->label], 'found by its Reactome id (P3937)');
+        self::assertContains('reactome:R-HSA-70171', $glycolysis->identifiers()->keys());
     }
 }

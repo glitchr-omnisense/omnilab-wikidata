@@ -65,7 +65,11 @@ final class WikidataSource extends HttpSource
         'P14607' => [Scheme::GBIF, true],
         'P846' => [Scheme::GBIF, true],
         'P3151' => [Scheme::INATURALIST, true],
+        'P3937' => [Scheme::REACTOME, true],
         'P3083' => [Scheme::SIMBAD, true],
+        // A Gaia DR3 source_id (4472832130942575872), a planet's or a system's name at the NASA Exoplanet Archive (51 Peg b).
+        'P13228' => [Scheme::GAIA, true],
+        'P5667' => [Scheme::EXOPLANET, true],
         'P716' => [Scheme::JPL_SBDB, true],
         // An earthquake's id in the USGS catalogue (ComCat): us7000pn9s, or one of the catalogues it keeps (iscgem..., official...).
         'P3196' => [Scheme::USGS_EVENT, true],
@@ -108,9 +112,9 @@ final class WikidataSource extends HttpSource
     /** search() narrowed to a domain: the statements an item of it carries (haswbstatement, one of them). */
     private const DOMAINS = [
         'chemistry' => 'P231|P235|P662|P683',
-        'biology' => 'P352|P351|P594|P353',
+        'biology' => 'P352|P351|P594|P353|P3937',
         'taxonomy' => 'P225',
-        'astronomy' => 'P3083|P716',
+        'astronomy' => 'P3083|P716|P13228|P5667',
         // Earthquakes and volcanoes: a USGS earthquake id, or instance of earthquake, volcano, stratovolcano, central volcano.
         'earth' => 'P3196|P31=Q7944|P31=Q8072|P31=Q169358|P31=Q190869',
     ];

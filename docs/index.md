@@ -44,9 +44,9 @@ A domain narrows a search to the items that carry one of these statements:
 | Domain | haswbstatement |
 |---|---|
 | chemistry | `P231` CAS, `P235` InChIKey, `P662` PubChem CID, `P683` ChEBI |
-| biology | `P352` UniProt, `P351` Entrez Gene, `P594` Ensembl gene, `P353` HGNC symbol |
+| biology | `P352` UniProt, `P351` Entrez Gene, `P594` Ensembl gene, `P353` HGNC symbol, `P3937` Reactome |
 | taxonomy | `P225` taxon name |
-| astronomy | `P3083` SIMBAD, `P716` JPL SBDB |
+| astronomy | `P3083` SIMBAD, `P716` JPL SBDB, `P13228` Gaia DR3, `P5667` NASA Exoplanet Archive |
 | earth | `P3196` USGS earthquake ID; `P31` earthquake (Q7944), volcano (Q8072), stratovolcano (Q169358), central volcano (Q190869) |
 
 ## What an item holds
@@ -85,6 +85,9 @@ solvent) and references are not read.
 | P3151 iNaturalist taxon ID | `inaturalist` | yes |
 | P3083 SIMBAD ID | `simbad` | yes |
 | P716 JPL Small-Body Database SPK-ID | `jpl.sbdb` | yes |
+| P3937 Reactome ID | `reactome`: `R-HSA-70171` (43,834 items on 2026-10-15) | yes |
+| P13228 Gaia ID | `gaia`: a Gaia DR3 source_id, `4472832130942575872` (4,606,263 items) | yes |
+| P5667 NASA Exoplanet Archive ID | `exoplanet`: a planet's or a system's name, `51 Peg b`, `Proxima Cen` (12,976 items) | yes |
 | P3196 USGS earthquake ID | `usgs.event`: `us7000pn9s`, or a catalogue ComCat keeps (`iscgem895681`, `official20110311054624120_30`) | yes |
 
 Properties:
@@ -141,7 +144,10 @@ by its P846 number `2440447`, the lion by its number but not by its key `4CGXP` 
 CAS 7732-18-5 on two items; the 2025 Myanmar earthquake (Q133574091) found by its USGS id
 `us7000pn9s`, its moment magnitude 7.7, its day and epicentre, and `iscgem900408` on two items;
 every P3196 value (read through the query service, once, for this count) matched against the
-`usgs.event` scheme: all read; an item that does not exist
+`usgs.event` scheme: all read; that evening 51 Peg b (Q242309) with its SIMBAD and NASA Exoplanet
+Archive names (`* 51 Peg b`, `51 Peg b`), Barnard's star (Q14268) found by its Gaia DR3 source_id
+`4472832130942575872` (P13228), glycolysis (Q45317172) by its Reactome id `R-HSA-70171` (P3937),
+and the first 20,000 P3937 values all of the `reactome` scheme's shape; an item that does not exist
 (`no-such-entity`); a search by label and its second page; a search among chemistry (46 items);
 the domain filters (Tohoku and Etna among earth, the Myanmar earthquake first for "Myanmar" with P3196, Andromeda among astronomy, TP53 among biology,
 "puma" among taxonomy); the answer while the servers lag (`maxlag`, 200 with `Retry-After: 5`,
