@@ -1,6 +1,6 @@
 # omnilab/wikidata
 
-Wikidata for [glitchr/omnilab](https://github.com/glitchr-studio/omnilab): an item by its
+Wikidata for [omniscient/omnilab](https://github.com/glitchr-studio/omnilab): an item by its
 Q-number, by the identifier of a science base its statements carry - PubChem CID, ChEBI, CAS,
 InChIKey, ChEMBL, UNII, DSSTox, KEGG, UniProt, NCBI Gene, Ensembl, NCBI Taxonomy, GBIF,
 iNaturalist, SIMBAD, JPL SBDB, USGS earthquake, Reactome, Gaia, the NASA Exoplanet Archive, HGNC,
