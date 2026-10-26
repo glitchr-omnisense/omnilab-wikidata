@@ -309,7 +309,7 @@ final class WikidataSourceTest extends TestCase
     {
         $this->source(null, ['throttle' => 0, 'mailto' => 'support@glitchr.io'])->entity('Q60235');
 
-        self::assertSame('omnilab/1.x (+https://github.com/glitchr-studio/omnilab; mailto:support@glitchr.io)', $this->agents[0]);
+        self::assertSame('omnilab/1.x (+https://github.com/glitchr-omnisense/omnilab; mailto:support@glitchr.io)', $this->agents[0]);
     }
 
     public function testErrorsMapTheSameWayAsEverySource(): void

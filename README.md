@@ -1,6 +1,6 @@
 # omnilab/wikidata
 
-Wikidata for [omniscient/omnilab](https://github.com/glitchr-studio/omnilab): an item by its
+Wikidata for [omnisense/omnilab](https://github.com/glitchr-omnisense/omnilab): an item by its
 Q-number, by the identifier of a science base its statements carry - PubChem CID, ChEBI, CAS,
 InChIKey, ChEMBL, UNII, DSSTox, KEGG, UniProt, NCBI Gene, Ensembl, NCBI Taxonomy, GBIF,
 iNaturalist, SIMBAD, JPL SBDB, USGS earthquake, Reactome, Gaia, the NASA Exoplanet Archive, HGNC,
@@ -57,7 +57,7 @@ HGNC id), `collect('wikidata', 'Q118931', 1, ['mpc'])` (Apophis, by its MPC numb
 Wikidata's structured data is under [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
 Wikimedia's [User-Agent policy](https://meta.wikimedia.org/wiki/User-Agent_policy) asks every
 client to name itself and a way to reach its operator: a call without such a User-Agent is
-refused (403). The source sends `omnilab/1.x (+https://github.com/glitchr-studio/omnilab;
+refused (403). The source sends `omnilab/1.x (+https://github.com/glitchr-omnisense/omnilab;
 mailto:...)` - set `mailto`, or `user_agent` to name your application. Wikimedia's
 [rate limits](https://www.mediawiki.org/wiki/Wikimedia_APIs/Rate_limits), new in 2026, allow an
 unauthenticated client with such a User-Agent 200 calls a minute; the
