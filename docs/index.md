@@ -1,5 +1,11 @@
 # omnilab/wikidata
 
+Wikidata, through the Action API (`https://www.wikidata.org/w/api.php`), for
+[omnisense/omnilab](https://github.com/glitchr-omnisense/omnilab): any item by its Q-number, by a
+science base's identifier (PubChem, ChEBI, CAS, UniProt, NCBI, GBIF, SIMBAD...) or by label - its
+labels in a language, its cross-references, a few properties with units - as an entity; a search,
+narrowed to a domain when asked. No key.
+
 ## Installation
 
 ```sh
@@ -17,6 +23,47 @@ $wikidata = (new WikidataSourceFactory($httpClient))->create([
 ```
 
 With the Symfony bundle, the factory is registered as `wikidata` (see the core's docs).
+
+## Credentials
+
+None: the Action API takes no key. Wikimedia's User-Agent policy asks every client to name itself
+and a way to reach its operator (403 otherwise): the default User-Agent names the project, `mailto`
+adds the address, `user_agent` names an application of its own.
+
+## Options
+
+The factory's options, with the defaults it applies (`WikidataSourceFactory`):
+
+| Option | Type | Default | Required | Effect |
+|---|---|---|---|---|
+| `language` | `string` | `en` | no | the language of labels, descriptions and aliases (`en`, `fr`, `de`, `ja`...), with Wikidata's fallbacks |
+| `synonyms` | `int` | `20` | no | how many aliases to keep; 0: none |
+| `mailto` | `?string` | null | no | a contact address, in the User-Agent: Wikimedia refuses a request that does not say who calls and how to reach them |
+| `user_agent` | `?string` | null | no | the whole User-Agent, in place of the one made from `mailto` |
+| `throttle` | `float` | `0.3` | no | seconds left between two calls: Wikimedia allows 200 a minute to a client identified by its User-Agent |
+| `base_uri` | `string` | `https://www.wikidata.org/w/api.php` | no | the Action API (`api.php`) |
+
+## Capabilities
+
+`capabilities()` answers `entity`, `search`, `cross_references`; an operation it does not answer throws `NotSupportedException` before any call.
+
+| Capability | Supported | |
+|---|---|---|
+| `entity` | yes | a Q-number (its page, its entity URI), an identifier its statements carry (the schemes [Calls](#calls) lists), or a label or alias; an identifier two items carry names neither; a scheme it does not look up refused before any call; two or three calls an item |
+| `search` | yes | `wbsearchentities` in the source's language, or, with a domain, a search narrowed to the items that carry that domain's statements; 50 a page at most |
+| `series` | no |  |
+| `products` | no |  |
+| `occurrences` | no |  |
+| `datasets` | no |  |
+| `jobs` | no |  |
+| `open` | no |  |
+| `structure` | no |  |
+| `cross_references` | yes | the identifiers of the science bases its statements carry; a gene's or a protein's class statements, and a compound's structures, are `related` |
+| `forecast` | no |  |
+| `historical` | no |  |
+| `area` | no |  |
+| `station` | no |  |
+| `cloud_cover` | no |  |
 
 ## Calls
 
@@ -186,6 +233,56 @@ the Quantity's uncertainty, half the interval.
 - The search index (CirrusSearch) follows edits after a delay: a statement just added may not be
   found by `haswbstatement` yet, while `wbgetentities` already gives it.
 
+## Example
+
+```php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Omnilab\Model\Domain;
+use Omnilab\Model\Identifier;
+use Omnilab\Model\Scheme;
+use Omnilab\Source\Query;
+use Omnilab\Wikidata\WikidataSourceFactory;
+use Symfony\Component\HttpClient\HttpClient;
+
+$wikidata = (new WikidataSourceFactory(HttpClient::create()))->create(['mailto' => 'you@example.org', 'language' => 'fr', 'synonyms' => 3]);
+
+$caffeine = $wikidata->entity(Identifier::cid(2519));   // by PubChem's CID (P662)
+echo $caffeine->label, ' (', $caffeine->id, ', ', $caffeine->kind, '): melting point ', $caffeine->property('melting_point'), ', ChEBI ', $caffeine->identifier(Scheme::CHEBI), ', CAS ', $caffeine->identifier(Scheme::CAS), "\n";
+
+$page = $wikidata->search(new Query('Betelgeuse', Domain::ASTRONOMY, limit: 2));
+foreach ($page as $item) {
+    echo '  ', $item->id, '  ', $item->label, '  SIMBAD ', $item->identifier(Scheme::SIMBAD), "\n";
+}
+```
+
+```
+caféine (wikidata:Q60235, type d'entité chimique): melting point 234 °C, ChEBI 27732, CAS 58-08-2
+  wikidata:Q12124  Bételgeuse  SIMBAD * alf Ori
+  wikidata:Q79176630  TYC 716-905-1  SIMBAD TYC 716-905-1
+```
+
+(as answered on 2026-10-27 in French: six calls, 0.3 s apart - the search by `haswbstatement:P662=2519`, the item, its classes' and units' labels, then the search narrowed to astronomy and its items)
+
+```yaml
+# config/packages/omnilab.yaml
+omnilab:
+    sources:
+        wikidata: { factory: wikidata, options: { mailto: '%env(OMNILAB_MAILTO)%', language: en } }
+```
+
+## Errors
+
+Every call goes through `HttpSource`: a 404 or a 410 (and a 204) is null - an empty page for a list -; a 429 is a `RateLimitedException` (`retryAfter` from `Retry-After`); a 5xx, a time-out or a host that does not answer an `UnavailableException`; any other 4xx a `ProviderException` with its `status` and what the service said; an answer that is not JSON a `ProviderException`, a web page answered for JSON an `UnavailableException`.
+
+The Action API's own errors come in a 200's `error`: `maxlag` and `ratelimited` are a
+`RateLimitedException` (its `lag` as `retryAfter`), the codes that mean nothing found an empty
+answer, any other a `ProviderException` with its code and info. A 403 (no User-Agent that names
+the caller) is a `ProviderException`. Before any call: an identifier of a scheme it does not look up
+(an InChI, a PDB code) (`NotSupportedException`).
+
 ## Verified, and not
 
 Against the real service on 2026-10-15, without a key: every property number above, read from
@@ -222,6 +319,21 @@ and back, 3 calls, 2.1 s), into the MPC (Apophis: 5 calls, 3.9 s), into eBird, I
 Catalogue of Life (the American Robin: 13 calls, 7.3 to 15.5 s in two runs) and into CODATA (the proton mass: 4 calls,
 1.7 s). The fixtures of that day are its answers, likewise.
 
+Again on 2026-10-27, in French: caffeine by its PubChem CID (its melting point, ChEBI and CAS ids),
+the search for Betelgeuse narrowed to astronomy (the example above).
+
 Not verified: a 429 of Wikimedia's rate limits (the handling is the core's, `Retry-After` read);
 the `ratelimited` API error, handled as a `RateLimitedException` as the etiquette describes it; the
 delay of the search index after an edit.
+
+## Responsibility
+
+This package is an independent, unofficial client: it is not affiliated with, endorsed by or
+sponsored by the Wikimedia Foundation or Wikidata. Wikidata's structured data are under
+[CC0](https://creativecommons.org/publicdomain/zero/1.0/); Wikimedia's
+[User-Agent policy](https://meta.wikimedia.org/wiki/User-Agent_policy) and
+[rate limits](https://www.mediawiki.org/wiki/Wikimedia_APIs/Rate_limits) apply, as the README's
+[Terms of use](https://github.com/glitchr-omnisense/omnilab-wikidata#terms-of-use) says. Whoever
+runs the package is responsible for complying with them and for any use made of what it returns:
+see the README's [Responsibility](https://github.com/glitchr-omnisense/omnilab-wikidata#responsibility)
+section.
