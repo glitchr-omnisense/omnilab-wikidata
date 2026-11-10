@@ -1,0 +1,457 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Access to an undefined property Omnilab\\Model\\BBox\|Omnilab\\Model\\Point\:\:\$latitude\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Access to an undefined property Omnilab\\Model\\BBox\|Omnilab\\Model\\Point\:\:\$longitude\.$#'
+			identifier: property.notFound
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access offset ''ids'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access offset ''srsearch'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 8
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$description on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$domain on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$id on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$image on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$kind on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 3
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$label on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$source on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$source on Omnilab\\Model\\Property\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$synonyms on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 5
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$unit on bool\|float\|int\|Omnilab\\Model\\Quantity\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$url on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot access property \$value on bool\|float\|int\|Omnilab\\Model\\Quantity\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot call method identifier\(\) on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot call method identifiers\(\) on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: method.nonObject
+			count: 10
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot call method keys\(\) on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot call method properties\(\) on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot call method property\(\) on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot call method value\(\) on Omnilab\\Model\\Entity\|null\.$#'
+			identifier: method.nonObject
+			count: 8
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot cast array\<mixed\>\|string to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Method Omnilab\\Wikidata\\Tests\\WikidataSourceTest\:\:source\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Offset 0 does not exist on array\{\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 9
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Offset 2 does not exist on array\{\}\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Parameter \#1 \$array of function current expects array\|object, array\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Parameter \#1 \$options of method Omnilab\\Source\\SourceFactory\:\:create\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Parameter \#2 \$array of function preg_grep expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Property Omnilab\\Wikidata\\Tests\\WikidataSourceTest\:\:\$calls \(list\<array\<string, string\>\>\) does not accept non\-empty\-list\<array\<int\|string, array\<mixed\>\|string\>\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: Tests/WikidataSourceTest.php
+
+		-
+			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 3
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P10585''\|''P10907''\|''P11956''\|''P13020''\|''P13228''\|''P14607''\|''P1550''\|''P1645''\|''P1929''\|''P231''\|''P234''\|''P235''\|''P2926''\|''P3083''\|''P3117''\|''P3151''\|''P3196''\|''P3444''\|''P351''\|''P3519''\|''P352''\|''P354''\|''P3841''\|''P3937''\|''P492''\|''P5270''\|''P5667''\|''P5736''\|''P591''\|''P592''\|''P594''\|''P627''\|''P652''\|''P662''\|''P665''\|''P683''\|''P685''\|''P686''\|''P6861''\|''P716''\|''P815''\|''P846''\|''P850'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P1090''\|''P1117''\|''P2017''\|''P2044''\|''P2054''\|''P2067''\|''P2101''\|''P2102''\|''P2120''\|''P2128''\|''P2146''\|''P225''\|''P233''\|''P234''\|''P235''\|''P2527''\|''P2528''\|''P2583''\|''P274'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P117'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P18'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P225'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P31'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P585'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P625'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''P9824''\|''P9902'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''datavalue'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''labels'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''match'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''search'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''searchinfo'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''snaktype'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''sroffset'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''text'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''totalhits'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset ''value'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot access offset string on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot cast mixed to float\.$#'
+			identifier: cast.double
+			count: 5
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 13
+			path: WikidataSource.php
+
+		-
+			message: '#^Method Omnilab\\Wikidata\\WikidataSource\:\:api\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Method Omnilab\\Wikidata\\WikidataSource\:\:byStatement\(\) should return string\|null but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Method Omnilab\\Wikidata\\WikidataSource\:\:pick\(\) has parameter \$terms with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Method Omnilab\\Wikidata\\WikidataSource\:\:when\(\) has parameter \$time with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_column expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_keys expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_unique expects an array of values castable to string, array\<int\<0, max\>, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$ids of method Omnilab\\Wikidata\\WikidataSource\:\:items\(\) expects list\<string\>, non\-empty\-list given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$ids of method Omnilab\\Wikidata\\WikidataSource\:\:label\(\) expects list\<string\>, list\<mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$item of method Omnilab\\Wikidata\\WikidataSource\:\:toEntity\(\) expects array\<string, mixed\>, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$statements of static method Omnilab\\Wikidata\\WikidataSource\:\:best\(\) expects list\<array\<string, mixed\>\>, mixed given\.$#'
+			identifier: argument.type
+			count: 10
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$terms of static method Omnilab\\Wikidata\\WikidataSource\:\:pick\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 3
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#1 \$unit of static method Omnilab\\Wikidata\\WikidataSource\:\:unitItem\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(array\|null\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(mixed\)\: bool\)\|null, Closure\(string\|null\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: WikidataSource.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 2
+			path: WikidataSource.php
+
+		-
+			message: '#^Cannot cast mixed to float\.$#'
+			identifier: cast.double
+			count: 1
+			path: WikidataSourceFactory.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: WikidataSourceFactory.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
+			count: 2
+			path: WikidataSourceFactory.php

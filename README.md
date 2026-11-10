@@ -66,6 +66,17 @@ leaves 0.3 s between two and an item costs two or three: cache what it answers.
 
 See [docs/](docs/index.md) for what is read, how it maps, and what Wikidata does not give here.
 
+## Usage policy
+
+Declared as data in [`policy.json`](policy.json) (read at https://www.mediawiki.org/wiki/Wikimedia_APIs/Rate_limits on 2026-11-10), and honoured on every request by the
+core: a limit reached waits when its window ends within `max_wait` seconds, else the request is not
+sent ([Usage policies](https://github.com/glitchr-omnisense/omnilab/blob/1.x/docs/policies.md)).
+
+- Limits: 200 a minute; at most 3 in flight.
+- Licence: CC0-1.0; commercial use: allowed.
+- Credit: not required: Wikidata (https://www.wikidata.org).
+- Needs: a User-Agent.
+
 ## Responsibility
 
 This package is an independent, unofficial client: it is not affiliated with, endorsed by or
