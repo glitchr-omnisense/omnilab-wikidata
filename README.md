@@ -52,6 +52,35 @@ HGNC id), `collect('wikidata', 'Q118931', 1, ['mpc'])` (Apophis, by its MPC numb
 | P3083, P716, P13228, P5667, P5736 | `simbad`, `jpl.sbdb`, `gaia`, `exoplanet`, `mpc` | identifiers |
 | P3196, P13020, P1645 | `usgs.event`, `usgs.site`, `codata` | identifiers |
 
+## Install and a first call
+
+```sh
+composer require omnilab/wikidata
+```
+
+A real call, with no account and no key: caffeine in Wikidata. `mailto` is your address, sent in the
+User-Agent so that the service can reach you before it blocks a caller; the source keeps to the
+limits its [`policy.json`](policy.json) declares.
+
+```php
+<?php
+
+require __DIR__.'/vendor/autoload.php';
+
+use Omnilab\Model\Scheme;
+use Omnilab\Wikidata\WikidataSourceFactory;
+
+$wikidata = (new WikidataSourceFactory())->create(['mailto' => 'you@example.org']);   // your address, in the User-Agent
+$caffeine = $wikidata->entity('Q60235');
+echo $caffeine->label, ', PubChem CID ', $caffeine->identifier(Scheme::PUBCHEM_CID), "\n";
+```
+
+Its output on 2026-11-13:
+
+```
+caffeine, PubChem CID 2519
+```
+
 ## Terms of use
 
 Wikidata's structured data is under [CC0](https://creativecommons.org/publicdomain/zero/1.0/).
